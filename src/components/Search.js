@@ -21,9 +21,28 @@ const Search = () => {
 
       setResults(data.query.search);
     };
+    const timeoutId = setTimeout(() => {
+      if (term) {
+        search();
+      } else {
+        setResults([]);
+      }
+    }, 500);
 
-    search();
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [term]);
+  const renderedResults = results.map((res) => {
+    return (
+      <div key={res.pageid} className="item">
+        <div className="content">
+          <div className="header">{res.title}</div>
+          <span dangerouslySetInnerHTML={{ __html: res.snippet }}></span>
+        </div>
+      </div>
+    );
+  });
   return (
     <div>
       <div className="ui form">
@@ -36,6 +55,7 @@ const Search = () => {
           />
         </div>
       </div>
+      <div className="ui celled list">{renderedResults}</div>
     </div>
   );
 };
